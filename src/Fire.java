@@ -1,3 +1,9 @@
+import java.util.List;
+import java.util.Queue;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.*;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -36,10 +42,53 @@ public class Fire {
      * @return the time at which the final tree to be incinerated starts burning
      */
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
+        if (forest[matchR][matchC] != 't') return -1;
+        Location start = new Location(matchR,matchC);
+
+        Queue<Location> q = new LinkedList<>();
+        Set<Location> visited = new HashSet<>();
+        int steps = -1;
+        q.add(start);
+        while (!q.isEmpty()) {
+            int qSize = q.size();
+
+            for(int i = 0; i < qSize; i++){
+                Location current = q.remove();
+                //System.out.println(current);
+                if(visited.contains(current)) continue;
+                visited.add(current);
+                List<Location> neighbors = possibleMoves(forest, current);
+                for(Location neighbor: neighbors){
+                    if(!visited.contains(neighbor)) q.add(neighbor);
+                    
+                }
+            }
+            steps++;
+        }
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
 
         // Implement this AND add more tests!!!
-        return -1;
+
+        return steps;
+    }
+
+    public static List<Location> possibleMoves(char[][] forest, Location current) {
+        int[][] moves = new int[][] {
+            {-1, 0},
+            { 1, 0},
+            { 0,-1},
+            { 0, 1}
+        };
+        List<Location> validMoves = new ArrayList<>();
+        for(int[] move : moves){
+            Location possibleMove = new Location(current.row() + move[0], current.column() + move[1]);
+            if( possibleMove.row() >= 0 && possibleMove.row() < forest.length && 
+                possibleMove.column() >= 0 && possibleMove.column() < forest[0].length && 
+                forest[possibleMove.row()][possibleMove.column()] != '.'){
+                    validMoves.add(possibleMove);
+               }
+        }
+        return validMoves;
     }
 }

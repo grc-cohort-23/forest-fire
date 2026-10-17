@@ -1,7 +1,10 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.CollectionUtils;
 
+import java.util.List;
+import java.util.ArrayList;
 public class FireTest {
     @Test
     public void testTimeToBurnExample() {
@@ -21,5 +24,77 @@ public class FireTest {
         assertEquals(expected, actual);
     }
 
-    // Add more tests!
+    @Test
+    public void testTimeToBurnFuse() {
+        char[][] fuse = {
+            {'t','t','t','t','t','t','t','t','t','t','t','t','t','t','t','t'} // time: 15
+        };
+        int row = 0;
+        int col = 0;
+
+        int expected = 15;
+        int actual = Fire.timeToBurn(fuse, row, col);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testIsolatedTree() {
+        char[][] forest = {
+            {'.','.','.'},
+            {'.','t','.'},
+            {'.','.','.'}
+        };
+        int row = 1;
+        int col = 1;
+
+        int expected = 0;
+        int actual = Fire.timeToBurn(forest, row, col);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void burnableTestAllBurnable() {
+        char[][] forest = {
+            {'t','t','t'},
+            {'t','t','t'},
+            {'t','t','t'}
+        };
+
+        int row = 1;
+        int col = 1;
+
+        List<int[]> expected = new ArrayList<>();
+        expected.add(new int[]{2,1});
+        expected.add(new int[]{0,1});
+        expected.add(new int[]{1,2});
+        expected.add(new int[]{1,0});
+
+        List<int[]> actual = Fire.burnable(forest, row, col);
+
+        assertTrue(compareListIntArr(expected, actual));
+    }
+
+    @Test
+    public void burnableAllGround() {
+        char[][] wasteland = {
+            {'.','.','.'},
+            {'.','.','.'},
+            {'.','.','.'}
+        };
+        int row = 1;
+        int col = 1;
+
+        List<int[]> actual = Fire.burnable(wasteland, row, col);
+
+        assertTrue(actual.size() == 0);
+    }
+
+    private static boolean compareListIntArr(List<int[]> list1, List<int[]> list2) {
+        String output1 = "", output2 = "";
+        for (int[] pair : list1) output1 += "{" + pair[0] + "," + pair[1] + "}";
+        for (int[] pair : list2) output2 += "{" + pair[0] + "," + pair[1] + "}";
+        return output1.equals(output2);
+    }
 }

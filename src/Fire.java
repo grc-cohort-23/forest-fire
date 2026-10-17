@@ -1,3 +1,7 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Queue;
+import java.util.ArrayDeque;
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -36,10 +40,66 @@ public class Fire {
      * @return the time at which the final tree to be incinerated starts burning
      */
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
-        // HINT: when adding to your BFS queue, you can include more information than
-        // just a location. What other information might be useful?
+        boolean[][] burnedTrees = new boolean[forest.length][forest[0].length];
+        Queue<int[]> queue = new ArrayDeque<>();
+        int time = -1;
 
-        // Implement this AND add more tests!!!
-        return -1;
+        queue.add(new int[]{matchR, matchC});
+        burnedTrees[matchR][matchC] = true;
+
+        while(!queue.isEmpty()) {
+            time++;
+            int breadth = queue.size();
+
+            for (int i = 0; i < breadth; i++) {
+                int[] tree = queue.remove();
+
+                List<int[]> neighbors = burnable(forest, tree[0], tree[1]);
+                for (int[] neighbor : neighbors) {
+                    if (burnedTrees[neighbor[0]][neighbor[1]] == false) {
+                        queue.add(neighbor);
+                        burnedTrees[neighbor[0]][neighbor[1]] = true;
+                    }
+                }
+            }
+        }
+
+        return time;
+    }
+
+    /**
+     * An explorer helper method to find burnable trees.
+     * 
+     * @param forest a 2d array, represented by t's (trees) and .'s (the ground)
+     * @param r the row of the current flame
+     * @param c the column of the current flame
+     * @return a List of integer arrays containing coordinate pairs of possible spreading
+     */
+    public static List<int[]> burnable(char[][] forest, int r, int c) {
+        List<int[]> burnables = new ArrayList<>();
+        int row = r, col = c;
+
+        row = r + 1;
+        if (row < forest.length && forest[row][col] == 't') {
+            burnables.add(new int[]{row, col});
+        }
+
+        row = r - 1;
+        if (row >= 0 && forest[row][col] == 't') {
+            burnables.add(new int[]{row, col});
+        }
+
+        row = r;
+        col = c + 1;
+        if (col < forest[row].length && forest[row][col] == 't') {
+            burnables.add(new int[]{row, col});
+        }
+
+        col = c - 1;
+        if (col >= 0 && forest[row][col] == 't') {
+            burnables.add(new int[]{row, col});
+        }
+
+        return burnables;
     }
 }

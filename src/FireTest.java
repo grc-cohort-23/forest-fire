@@ -22,4 +22,33 @@ public class FireTest {
     }
 
     // Add more tests!
+    @Test
+public void testSingleTree() {
+    char[][] forest = {{'t'}};
+    assertEquals(0, Fire.timeToBurn(forest, 0, 0));
+}
+
+@Test
+public void testMatchOnEmptyGround() {
+    char[][] forest = {{'t', '.', 't'}};
+    assertEquals(0, Fire.timeToBurn(forest, 0, 1));
+}
+ @Test
+    public void testBranchingInFourDirections() {
+        char[][] forest = {
+            {'.', 't', '.'},
+            {'t', 't', 't'},
+            {'.', 't', '.'}
+        };
+        assertEquals(1, Fire.timeToBurn(forest, 1, 1));
+    }
+     @Test
+    public void testIsolatedStartingTree() {
+        char[][] forest = {
+            {'t', '.', 't'},
+            {'.', '.', '.'},
+            {'t', '.', 't'}
+        };
+        assertEquals(0, Fire.timeToBurn(forest, 0, 0));
+    }
 }

@@ -1,3 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -40,6 +43,56 @@ public class Fire {
         // just a location. What other information might be useful?
 
         // Implement this AND add more tests!!!
-        return -1;
+
+
+        // rows = forest.length
+        // cols = array 0 forest of length
+
+        // if forest of matchR matchC != to t then return 0
+        // t = time
+
+        int rows = forest.length; 
+        int cols = forest[0].length;
+
+        if (forest[matchR][matchC] != 't') return 0;
+
+        // boolean[][] visited = new boolean rows cols
+        // queue <int[]> matchR matchC , 0
+
+        // return true
+
+        // maxtime = 0
+
+        // while queue isnt empty -> int[] = queue.remove 
+        //maxtime = math.max maxtime , time
+
+        // for int [] d : dirs ->
+         boolean[][] visited = new boolean[rows][cols];
+    Queue<int[]> queue = new ArrayDeque<>();
+    queue.add(new int[] {matchR, matchC, 0}); // row, col, time
+    visited[matchR][matchC] = true;
+
+    int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int maxTime = 0;
+
+    while (!queue.isEmpty()) {
+        int[] cur = queue.remove();
+        int r = cur[0], c = cur[1], time = cur[2];
+        maxTime = Math.max(maxTime, time);
+
+        for (int[] d : dirs) {
+            int nr = r + d[0];
+            int nc = c + d[1];
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols
+                    && !visited[nr][nc] && forest[nr][nc] == 't') {
+                visited[nr][nc] = true;
+                queue.add(new int[] {nr, nc, time + 1});
+            }
+        }
     }
+    return maxTime;
 }
+}
+
+
+   

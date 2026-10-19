@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -39,7 +44,68 @@ public class Fire {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
 
-        // Implement this AND add more tests!!!
-        return -1;
+        // Validates the location of the starting tree
+        Location start = firstTreeLocation(forest, matchR, matchC);
+
+        boolean[][] visited = new boolean[forest.length][forest[0].length];
+        Queue<Location> queue = new LinkedList<>();
+
+        queue.add(start);
+        visited[start.row()][start.column()] = true;
+
+        int finalTime = 0;
+
+        while(!queue.isEmpty()){
+            Location current = queue.remove();
+            finalTime = Math.max(finalTime, current.time());
+            List<Location> neighbors = possibleMoves(forest, current);
+
+            for (Location neighbor : neighbors) {
+                int row = neighbor.row();
+                int column = neighbor.column();
+                if (!visited[row][column]) {
+                    visited[row][column] = true;
+                    Location nextTree = new Location(row, column, current.time() + 1);
+                    queue.add(nextTree);
+                }
+            }
+        }
+
+        return finalTime;
+    }
+
+    public static List<Location> possibleMoves(char[][] forest, Location current){
+        int[][] moves = new int[][] {
+            {-1, 0}, //up
+            {1, 0},  //down
+            {0, -1}, //left
+            {0, 1}   //right
+        };
+
+        List<Location> validMoves = new ArrayList<>();
+
+        for(int[] move : moves){
+            int nextRow = current.row() + move[0];
+            int nextColumn = current.column() + move[1];
+
+            if (nextRow >= 0 && nextRow < forest.length &&
+                nextColumn >= 0 && nextColumn < forest[nextRow].length) {
+                if (forest[nextRow][nextColumn] == 't') {
+                    validMoves.add(new Location(nextRow, nextColumn, 0));
+                }
+            }
+        }
+
+        return validMoves;
+    }
+
+    public static Location firstTreeLocation(char[][] forest, int matchR, int matchC) {
+        if (forest == null || matchR < 0 || matchR >= forest.length ||
+            forest[matchR] == null || matchC < 0 || matchC >= forest[matchR].length ||
+            forest[matchR][matchC] != 't')  {
+            throw new NoTreesException();
+        }
+
+        return new Location(matchR, matchC, 0);
     }
 }

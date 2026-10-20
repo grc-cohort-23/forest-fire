@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -36,10 +39,36 @@ public class Fire {
      * @return the time at which the final tree to be incinerated starts burning
      */
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
-        // HINT: when adding to your BFS queue, you can include more information than
-        // just a location. What other information might be useful?
+    boolean[][] burning = new boolean[forest.length][forest[0].length];
+    Queue<int[]> queue = new LinkedList<>();
 
-        // Implement this AND add more tests!!!
-        return -1;
+    queue.add(new int[]{matchR, matchC, 0});
+
+    burning[matchR][matchC] = true;
+
+    int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int maxTime = 0;
+
+    while (!queue.isEmpty()) {
+
+        int[] cur = queue.poll();
+        int r = cur[0];
+        int c = cur[1];
+        int time = cur[2];
+        maxTime = Math.max(maxTime, time);
+
+        for (int[] d : dirs) {
+            int nr = r + d[0];
+            int nc = c + d[1];
+            if (nr < 0 || nr >= forest.length) continue;
+            if (nc < 0 || nc >= forest[0].length) continue;
+            if (forest[nr][nc] != 't') continue;
+            if (burning[nr][nc]) continue;
+            burning[nr][nc] = true;    
+            queue.add(new int[]{nr, nc, time + 1});
+        }
+    }
+    
+    return maxTime;
     }
 }

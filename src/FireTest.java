@@ -22,4 +22,39 @@ public class FireTest {
     }
 
     // Add more tests!
+     @Test
+    public void testTimeToBurn_loneTree() {
+        char[][] forest = {
+            {'.','.','.'},
+            {'.','t','.'},
+            {'.','.','.'}
+        };
+
+        int actual = Fire.timeToBurn(forest, 1, 1);
+
+        assertEquals(0, actual);
+    }
+
+     @Test
+    public void testTimeToBurn_singleRow() {
+        char[][] forest = {
+            {'t','t','t','t','t'}
+        };
+
+        int actual = Fire.timeToBurn(forest, 0, 0);
+
+        assertEquals(4, actual);
+    }
+     @Test
+    public void testTimeToBurn_cornerStart() {
+        char[][] forest = {
+            {'t','t','t'},
+            {'t','t','t'},
+            {'t','t','t'}
+        };
+
+        int actual = Fire.timeToBurn(forest, 0, 0);
+
+        assertEquals(4, actual);
+    }
 }

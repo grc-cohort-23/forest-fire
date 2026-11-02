@@ -1,3 +1,7 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.List;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -36,10 +40,61 @@ public class Fire {
      * @return the time at which the final tree to be incinerated starts burning
      */
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
-        // HINT: when adding to your BFS queue, you can include more information than
-        // just a location. What other information might be useful?
+      boolean[][] visited =
+            new boolean[forest.length][forest[0].length];
 
-        // Implement this AND add more tests!!!
-        return -1;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[] {matchR, matchC, 0});
+        visited[matchR][matchC] = true;
+
+        int lastTime = 0;
+
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int time = current[2];
+            lastTime = time;
+
+            for (int[] move : nextMoves(forest, current)) {
+                if (!visited[move[0]][move[1]]) {
+                    visited[move[0]][move[1]] = true;
+
+                    queue.add(new int[] {
+                        move[0], move[1], time + 1
+                    });
+                }
+            }
+        }
+
+        return lastTime;
+    }
+
+    
+    private static List<int[]> nextMoves(char[][] forest, int[] current) {
+        List<int[]> moves = new LinkedList<>();
+
+        int[] rowChange = {-1, 1, 0, 0};
+        int[] colChange = {0, 0, -1, 1};
+
+        for (int i = 0; i < 4; i++) {
+            int row = current[0] + rowChange[i];
+            int col = current[1] + colChange[i];
+
+            if (row >= 0 && row < forest.length
+                    && col >= 0 && col < forest[0].length
+                    && forest[row][col] == 't') {
+                moves.add(new int[] {row, col});
+            }
+        }
+
+        return moves;
     }
 }
+
+
+
+ 
+
+
+
+
+     

@@ -21,5 +21,25 @@ public class FireTest {
         assertEquals(expected, actual);
     }
 
-    // Add more tests!
+ @Test
+    public void straightLine() {
+        char[][] forest = { {'t','t','t','t','t'} };
+        assertEquals(4, Fire.timeToBurn(forest, 0, 0));
+    }
+
+    @Test
+    public void startInMiddle() {
+        char[][] forest = { {'t','t','t','t','t'} };
+        assertEquals(2, Fire.timeToBurn(forest, 0, 2));
+    }
 }
+
+
+
+
+
+
+
+  
+ 
+ 

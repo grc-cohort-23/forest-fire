@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -40,6 +43,54 @@ public class Fire {
         // just a location. What other information might be useful?
 
         // Implement this AND add more tests!!!
-        return -1;
+        int rows = forest.length;
+        int cols = forest[0].length;
+
+        boolean[][] visited = new boolean[rows][cols];
+
+        Queue<int[]> queue = new LinkedList<>();
+
+        queue.add(new int[]{matchR, matchC, 0});
+        visited[matchR][matchC] = true;
+
+        int maxTime = 0;
+
+        int[][] directions = {
+            {-1, 0},
+            {1, 0},
+            {0, -1},
+            {0, 1}
+        };
+
+        while (!queue.isEmpty()) {
+
+            int[] current = queue.remove();
+
+            int row = current[0];
+            int col = current[1];
+            int time = current[2];
+
+            maxTime = Math.max(maxTime, time);
+
+            for (int[] direction : directions) {
+
+                int newRow = row + direction[0];
+                int newCol = col + direction[1];
+
+                if (newRow >= 0 && newRow < rows &&
+                    newCol >= 0 && newCol < cols &&
+                    forest[newRow][newCol] == 't' &&
+                    !visited[newRow][newCol]) {
+
+                    visited[newRow][newCol] = true;
+
+                    queue.add(new int[]{
+                        newRow, newCol, time + 1
+                    });
+                }
+            }
+        }
+
+        return maxTime;
     }
 }
